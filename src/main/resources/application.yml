@@ -1,0 +1,34 @@
+spring:
+  profiles:
+    active: dev
+  mandatory-file-encoding: UTF-8
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: true
+    property-naming-strategy: SNAKE_CASE
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+
+mybatis-plus:
+  configuration:
+    # 开启下划线转驼峰
+    map-underscore-to-camel-case: true
+    # 指定默认枚举类型的类型转换器
+    default-enum-type-handler: com.baomidou.mybatisplus.extension.handlers.MybatisEnumTypeHandler
+  global-config:
+    # 开启/关闭 banner 打印
+    banner: false
+    db-config:
+      # 逻辑删除（软删除）
+      logic-delete-value: NOW()
+      logic-not-delete-value: 'NULL'
+  # mapper路径位置
+  mapper-locations: classpath:mapper/*.xml
+
+token:
+#  1000 * 60 * 60 * 2 -->两小时
+  access-expire: 7200000
+  refresh-expire: 86400000
+  secret: OM4r1Sul

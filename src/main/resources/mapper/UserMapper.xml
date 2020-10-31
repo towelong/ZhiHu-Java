@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.towelong.zhihu.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.towelong.zhihu.model.UserDO">
+        <id column="id" property="id"/>
+        <result column="nickname" property="nickname"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="avatar" property="avatar"/>
+        <result column="login_type" property="loginType"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="delete_time" property="deleteTime"/>
+    </resultMap>
+
+    <select id="selectCountByAccount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM user AS u
+        WHERE u.account = #{account}
+          AND u.delete_time IS NULL
+    </select>
+
+    <select id="findUserById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT u.id,
+               u.nickname,
+               u.account,
+               u.password,
+               u.avatar,
+               u.login_type,
+               u.create_time,
+               u.update_time,
+               u.delete_time
+        FROM user AS u
+        WHERE u.id = #{id}
+          AND u.delete_time IS NULL
+    </select>
+
+
+</mapper>
