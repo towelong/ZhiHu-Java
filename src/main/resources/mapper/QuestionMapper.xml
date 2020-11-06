@@ -15,15 +15,17 @@
     </resultMap>
 
     <select id="selectQuestionDetail" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        SELECT q.id, q.title, q.summary, q.image, q.content,q.create_time,q.update_time
+        SELECT q.id, q.title, q.summary, q.image, q.content, q.create_time, q.update_time
         FROM question AS q
-        WHERE q.id = #{id} AND q.delete_time IS NULL
+        WHERE q.id = #{id}
+          AND q.delete_time IS NULL
     </select>
 
     <select id="selectPageQuestion" resultMap="BaseResultMap">
-        SELECT q.id, q.title, q.summary, q.image, q.content,q.create_time,q.update_time
+        SELECT q.id, q.title, q.summary, q.image, q.content, q.create_time, q.update_time
         FROM question AS q
         WHERE q.delete_time IS NULL
+        ORDER BY q.create_time DESC
     </select>
 
 </mapper>

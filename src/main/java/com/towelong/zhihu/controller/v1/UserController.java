@@ -20,10 +20,12 @@ import com.towelong.zhihu.dto.user.UserLoginDTO;
 import com.towelong.zhihu.model.UserDO;
 import com.towelong.zhihu.service.UserService;
 import com.towelong.zhihu.vo.TokenVo;
+import com.towelong.zhihu.vo.UserSimpleVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Positive;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +42,17 @@ public class UserController {
 
     @Autowired
     private DoubleJWT doubleJWT;
+
+    @GetMapping("/{id}")
+    public ResultResponse<UserSimpleVo> getUserSimple(@PathVariable(value = "id")
+                                                      @Positive(message = "{id.positive}") Integer id) {
+        UserDO userDO = userService.selectUserById(id);
+        UserSimpleVo vo = UserSimpleVo.builder()
+                .nickname(userDO.getNickname())
+                .avatar(userDO.getAvatar())
+                .build();
+        return new ResultResponse<>(0,vo,"ok");
+    }
 
     @PostMapping("")
     public UnifyResponse createUser(@RequestBody @Validated CreateOrUpdateUserDTO validate) {

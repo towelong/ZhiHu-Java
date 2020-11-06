@@ -33,7 +33,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentDO> im
     public IPage<CommentDO> selectAll(int page, int size) {
         Page<CommentDO> pages = new Page<>(page, size);
         QueryWrapper<CommentDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(CommentDO::getIsParent, true);
+        wrapper.lambda().eq(CommentDO::getIsParent, true).orderByDesc(CommentDO::getCreateTime);
         return this.baseMapper.selectPage(pages, wrapper);
     }
 
@@ -41,7 +41,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, CommentDO> im
     public IPage<CommentDO> selectCommentByQuestionId(int page, int size, Integer questionId, Boolean isParent) {
         Page<CommentDO> pages = new Page<>(page, size);
         QueryWrapper<CommentDO> wrapper = new QueryWrapper<>();
-        wrapper.lambda().eq(CommentDO::getQuestionId, questionId).eq(CommentDO::getIsParent, isParent);
+        wrapper.lambda().eq(CommentDO::getQuestionId, questionId).eq(CommentDO::getIsParent, isParent).orderByDesc(CommentDO::getCreateTime);
         return this.baseMapper.selectPage(pages, wrapper);
     }
 
