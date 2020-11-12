@@ -26,8 +26,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -42,6 +40,17 @@ public class UserController {
 
     @Autowired
     private DoubleJWT doubleJWT;
+
+    @GetMapping("")
+    @LoginRequired
+    public ResultResponse<UserSimpleVo> getUserSimpleByToken(){
+        UserDO userDO = userService.selectUserById(LocalUser.getLocalUser().getId());
+        UserSimpleVo vo = UserSimpleVo.builder()
+                .nickname(userDO.getNickname())
+                .avatar(userDO.getAvatar())
+                .build();
+        return new ResultResponse<>(0,vo,"ok");
+    }
 
     @GetMapping("/{id}")
     public ResultResponse<UserSimpleVo> getUserSimple(@PathVariable(value = "id")

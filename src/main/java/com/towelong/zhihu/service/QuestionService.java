@@ -13,7 +13,16 @@ import com.towelong.zhihu.dto.question.CreateQuestionDTO;
 import com.towelong.zhihu.model.QuestionDO;
 import com.towelong.zhihu.vo.QuestionVo;
 
+import java.util.List;
+
 public interface QuestionService extends IService<QuestionDO> {
+    /**
+     * 查询用户发布的问题
+     * @param userId 用户id
+     * @return List<QuestionDO>
+     */
+    IPage<QuestionVo> selectUserQuestion(Integer userId, int page, int size);
+
     /**
      * 查询问题id为$id 的内容
      * @param id 问题id

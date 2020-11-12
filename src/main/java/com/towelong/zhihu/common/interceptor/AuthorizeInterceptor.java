@@ -75,6 +75,9 @@ public class AuthorizeInterceptor extends HandlerInterceptorAdapter {
             case REFRESH:
                 // 刷新令牌
                 return authorizeHandler.handleRefresh(request, response, null);
+            case USER_PERMISSION:
+                // 单个权限
+                return authorizeHandler.handleUserPermission(request, response, null);
             default:
                 return true;
         }

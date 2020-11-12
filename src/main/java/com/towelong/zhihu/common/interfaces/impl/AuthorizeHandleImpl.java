@@ -79,6 +79,9 @@ public class AuthorizeHandleImpl implements AuthorizeHandler {
         if (handleAdmin(request, response, meta))
             return true;
 
+        if(meta == null){
+            return true;
+        }
         String permission = meta.permission();
         UserDO user = LocalUser.getLocalUser();
         // 得到当前权限的id
@@ -132,7 +135,6 @@ public class AuthorizeHandleImpl implements AuthorizeHandler {
         if (!header.startsWith("Bearer")) {
             throw new AuthorizationException(8002);
         }
-        String token = header.replace("Bearer ", "");
-        return token;
+        return header.replace("Bearer ", "");
     }
 }

@@ -28,4 +28,14 @@
         ORDER BY q.create_time DESC
     </select>
 
+    <select id="selectPageQuestionByUser" resultMap="BaseResultMap">
+        SELECT q.id, q.title, q.summary, q.image, q.content, q.create_time, q.update_time
+        FROM question AS q
+        WHERE q.delete_time IS NULL AND q.id IN
+        <foreach collection="questionIds" item="questionId" index="index" open="(" close=")" separator=",">
+            #{questionId}
+        </foreach>
+        ORDER BY q.create_time DESC
+    </select>
+
 </mapper>

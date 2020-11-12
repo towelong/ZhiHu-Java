@@ -7,9 +7,11 @@
 package com.towelong.zhihu.controller.v1;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.towelong.zhihu.common.LocalUser;
 import com.towelong.zhihu.common.ResultResponse;
 import com.towelong.zhihu.common.UnifyResponse;
 import com.towelong.zhihu.common.annotation.LoginRequired;
+import com.towelong.zhihu.common.annotation.UserPermissionRequired;
 import com.towelong.zhihu.common.configuration.CodeMessageConfiguration;
 import com.towelong.zhihu.common.exception.NotFoundException;
 import com.towelong.zhihu.dto.question.CreateQuestionDTO;
@@ -19,15 +21,15 @@ import com.towelong.zhihu.model.ReplyDO;
 import com.towelong.zhihu.service.CommentService;
 import com.towelong.zhihu.service.QuestionService;
 import com.towelong.zhihu.service.ReplyService;
-import com.towelong.zhihu.vo.CommentVo;
-import com.towelong.zhihu.vo.QuestionDetailVo;
-import com.towelong.zhihu.vo.QuestionVo;
-import com.towelong.zhihu.vo.ReplyVo;
+import com.towelong.zhihu.service.UserQuestionService;
+import com.towelong.zhihu.vo.*;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.Positive;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -41,6 +43,8 @@ public class QuestionController {
     private CommentService commentService;
     @Autowired
     private ReplyService replyService;
+    @Autowired
+    private UserQuestionService userQuestionService;
 
     @Autowired
     private CodeMessageConfiguration code;
@@ -63,12 +67,36 @@ public class QuestionController {
         return new ResultResponse<>(0, vo);
     }
 
+    @GetMapping("")
+    public ResultResponse<UserSimpleVo> getQuestionAuthor(@RequestParam("id") Integer questionId) {
+        UserSimpleVo userSimpleVo = userQuestionService.selectUserByQuestionId(questionId);
+        return new ResultResponse<>(0, userSimpleVo, "ok");
+    }
+
     @GetMapping("/all")
     public ResultResponse<QuestionVo> getPageQuestion(
             @RequestParam(defaultValue = "1") Integer page,
             @RequestParam(defaultValue = "10") Integer count) {
         QuestionVo questionVo = new QuestionVo();
         IPage<QuestionVo> questionVoIPage = questionService.selectPageQuestion(page, count);
+        questionVo.setCount(count);
+        questionVo.setPage(page);
+        questionVo.setTotal(questionVoIPage.getTotal());
+        List<QuestionVo> records = questionVoIPage.getRecords();
+        questionVo.setQuestion(records);
+        return new ResultResponse<>(0, questionVo);
+    }
+
+    @GetMapping("/user")
+    @UserPermissionRequired
+    public ResultResponse<QuestionVo> getUserPageQuestion(
+            @RequestParam(defaultValue = "1") Integer page,
+            @RequestParam(defaultValue = "10") Integer count) {
+        QuestionVo questionVo = new QuestionVo();
+        IPage<QuestionVo> questionVoIPage = questionService.selectUserQuestion(
+                LocalUser.getLocalUser().getId(),
+                page,
+                count);
         questionVo.setCount(count);
         questionVo.setPage(page);
         questionVo.setTotal(questionVoIPage.getTotal());

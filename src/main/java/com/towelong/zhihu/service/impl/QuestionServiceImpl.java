@@ -6,6 +6,7 @@
  */
 package com.towelong.zhihu.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -16,10 +17,13 @@ import com.towelong.zhihu.mapper.UserQuestionMapper;
 import com.towelong.zhihu.model.QuestionDO;
 import com.towelong.zhihu.model.UserQuestionDO;
 import com.towelong.zhihu.service.QuestionService;
+import com.towelong.zhihu.service.UserQuestionService;
 import com.towelong.zhihu.vo.QuestionVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -28,6 +32,15 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, QuestionDO>
     private QuestionMapper questionMapper;
     @Autowired
     private UserQuestionMapper userQuestionMapper;
+    @Autowired
+    private UserQuestionService userQuestionService;
+
+    @Override
+    public IPage<QuestionVo> selectUserQuestion(Integer userId, int page, int size) {
+        List<Integer> questionIds = userQuestionService.selectQuestionByUserId(userId);
+        Page<QuestionDO> pages = new Page<>(page, size);
+        return questionMapper.selectPageQuestionByUser(questionIds,pages);
+    }
 
     @Override
     public QuestionDO selectQuestionDetail(Integer id) {

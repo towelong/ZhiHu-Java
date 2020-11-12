@@ -13,6 +13,8 @@ import com.towelong.zhihu.model.QuestionDO;
 import com.towelong.zhihu.vo.QuestionVo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface QuestionMapper extends BaseMapper<QuestionDO> {
     /**
@@ -28,4 +30,11 @@ public interface QuestionMapper extends BaseMapper<QuestionDO> {
      * @return 问题分页列表
      */
     IPage<QuestionVo> selectPageQuestion(Page<QuestionDO> page);
+
+    /**
+     * 查找用户自身发布的所有问题
+     * @param page 分页对象
+     * @return 问题分页列表
+     */
+    IPage<QuestionVo> selectPageQuestionByUser(List<Integer> questionIds, Page<QuestionDO> page);
 }
